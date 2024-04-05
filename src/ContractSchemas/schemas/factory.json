@@ -1,0 +1,1945 @@
+{
+  "contract_name": "factory",
+  "contract_version": "0.1.0-beta.15",
+  "idl_version": "1.0.0",
+  "instantiate": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "InstantiateMsg",
+    "description": "Instantiate a new factory contract.",
+    "type": "object",
+    "required": [
+      "dao",
+      "kill_switch",
+      "liquidity_token_code_id",
+      "market_code_id",
+      "migration_admin",
+      "owner",
+      "position_token_code_id",
+      "wind_down"
+    ],
+    "properties": {
+      "dao": {
+        "description": "DAO address",
+        "allOf": [
+          {
+            "$ref": "#/definitions/RawAddr"
+          }
+        ]
+      },
+      "kill_switch": {
+        "description": "Kill switch address",
+        "allOf": [
+          {
+            "$ref": "#/definitions/RawAddr"
+          }
+        ]
+      },
+      "label_suffix": {
+        "description": "Suffix attached to all contracts instantiated by the factory",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "liquidity_token_code_id": {
+        "description": "The code id for the liquidity_token contract",
+        "type": "string"
+      },
+      "market_code_id": {
+        "description": "The code id for the market contract",
+        "type": "string"
+      },
+      "migration_admin": {
+        "description": "Migration admin, needed for instantiating/migrating sub-contracts",
+        "allOf": [
+          {
+            "$ref": "#/definitions/RawAddr"
+          }
+        ]
+      },
+      "owner": {
+        "description": "Perpetual swap admin address",
+        "allOf": [
+          {
+            "$ref": "#/definitions/RawAddr"
+          }
+        ]
+      },
+      "position_token_code_id": {
+        "description": "The code id for the position_token contract",
+        "type": "string"
+      },
+      "wind_down": {
+        "description": "Wind down address",
+        "allOf": [
+          {
+            "$ref": "#/definitions/RawAddr"
+          }
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "definitions": {
+      "RawAddr": {
+        "description": "A raw address passed in via JSON.\n\nThe purpose of this newtype wrapper is to make it clear at the type level if a parameter is an address, and ensure that we go through a proper validation step when using it.",
+        "type": "string"
+      }
+    }
+  },
+  "execute": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "ExecuteMsg",
+    "description": "Execute a message on the factory.",
+    "oneOf": [
+      {
+        "description": "Add a new market",
+        "type": "object",
+        "required": [
+          "add_market"
+        ],
+        "properties": {
+          "add_market": {
+            "type": "object",
+            "required": [
+              "new_market"
+            ],
+            "properties": {
+              "new_market": {
+                "description": "Parameters for the new market",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/NewMarketParams"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Set the market code id, i.e. if it's been migrated",
+        "type": "object",
+        "required": [
+          "set_market_code_id"
+        ],
+        "properties": {
+          "set_market_code_id": {
+            "type": "object",
+            "required": [
+              "code_id"
+            ],
+            "properties": {
+              "code_id": {
+                "description": "Code ID to use for future market contracts",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Set the position token code id, i.e. if it's been migrated",
+        "type": "object",
+        "required": [
+          "set_position_token_code_id"
+        ],
+        "properties": {
+          "set_position_token_code_id": {
+            "type": "object",
+            "required": [
+              "code_id"
+            ],
+            "properties": {
+              "code_id": {
+                "description": "Code ID to use for future position token contracts",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Set the liquidity token code id, i.e. if it's been migrated",
+        "type": "object",
+        "required": [
+          "set_liquidity_token_code_id"
+        ],
+        "properties": {
+          "set_liquidity_token_code_id": {
+            "type": "object",
+            "required": [
+              "code_id"
+            ],
+            "properties": {
+              "code_id": {
+                "description": "Code ID to use for future liquidity token contracts",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Change the owner addr",
+        "type": "object",
+        "required": [
+          "set_owner"
+        ],
+        "properties": {
+          "set_owner": {
+            "type": "object",
+            "required": [
+              "owner"
+            ],
+            "properties": {
+              "owner": {
+                "description": "New owner",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Change the migrationadmin",
+        "type": "object",
+        "required": [
+          "set_migration_admin"
+        ],
+        "properties": {
+          "set_migration_admin": {
+            "type": "object",
+            "required": [
+              "migration_admin"
+            ],
+            "properties": {
+              "migration_admin": {
+                "description": "New migration admin",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Change the dao addr",
+        "type": "object",
+        "required": [
+          "set_dao"
+        ],
+        "properties": {
+          "set_dao": {
+            "type": "object",
+            "required": [
+              "dao"
+            ],
+            "properties": {
+              "dao": {
+                "description": "New DAO",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Change the kill switch addr",
+        "type": "object",
+        "required": [
+          "set_kill_switch"
+        ],
+        "properties": {
+          "set_kill_switch": {
+            "type": "object",
+            "required": [
+              "kill_switch"
+            ],
+            "properties": {
+              "kill_switch": {
+                "description": "New kill switch administrator",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Change the wind down addr",
+        "type": "object",
+        "required": [
+          "set_wind_down"
+        ],
+        "properties": {
+          "set_wind_down": {
+            "type": "object",
+            "required": [
+              "wind_down"
+            ],
+            "properties": {
+              "wind_down": {
+                "description": "New wind down administrator",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Convenience mechanism to transfer all dao fees from all markets",
+        "type": "object",
+        "required": [
+          "transfer_all_dao_fees"
+        ],
+        "properties": {
+          "transfer_all_dao_fees": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "Perform a shutdown on the given markets with the given impacts",
+        "type": "object",
+        "required": [
+          "shutdown"
+        ],
+        "properties": {
+          "shutdown": {
+            "type": "object",
+            "required": [
+              "effect",
+              "impacts",
+              "markets"
+            ],
+            "properties": {
+              "effect": {
+                "description": "Are we disabling these impacts, or reenabling them?",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/ShutdownEffect"
+                  }
+                ]
+              },
+              "impacts": {
+                "description": "Which impacts to have? Empty list means shut down all activities",
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/ShutdownImpact"
+                }
+              },
+              "markets": {
+                "description": "Which markets to impact? Empty list means impact all markets",
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/MarketId"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    ],
+    "definitions": {
+      "ConfigUpdate": {
+        "description": "Helper struct to conveniently update [Config]\n\nFor each field below, please see the corresponding [Config] field's documentation.",
+        "type": "object",
+        "properties": {
+          "borrow_fee_rate_max_annualized": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "borrow_fee_rate_min_annualized": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "borrow_fee_sensitivity": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "carry_leverage": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "crank_execs": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "crank_fee_charged": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Usd"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "crank_fee_reward": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Usd"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "crank_fee_surcharge": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Usd"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "delta_neutrality_fee_cap": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "delta_neutrality_fee_sensitivity": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "delta_neutrality_fee_tax": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "disable_position_nft_exec": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "exposure_margin_ratio": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "funding_rate_max_annualized": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "funding_rate_sensitivity": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "liquidity_cooldown_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "liquifunding_delay_fuzz_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "liquifunding_delay_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint32",
+            "minimum": 0.0
+          },
+          "max_leverage": {
+            "description": "\n            A signed number type with high fidelity.\n            Similar in spirit to cosmwasm_bignumber::Decimal256 - it is\n            a more ergonomic wrapper around cosmwasm-std by making more things public\n            but we also add negative values and other methods as-needed\n        ",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "max_liquidity": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/MaxLiquidity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "max_xlp_rewards_multiplier": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "min_xlp_rewards_multiplier": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minimum_deposit_usd": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Usd"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mute_events": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "protocol_tax": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "spot_price": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/SpotPriceConfigInit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target_utilization": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonZero decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trading_fee_counter_collateral": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trading_fee_notional_size": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unstake_period_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint32",
+            "minimum": 0.0
+          }
+        },
+        "additionalProperties": false
+      },
+      "Decimal256": {
+        "description": "A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0\n\nThe greatest possible value that can be represented is 115792089237316195423570985008687907853269984665640564039457.584007913129639935 (which is (2^256 - 1) / 10^18)",
+        "type": "string"
+      },
+      "Identifier": {
+        "type": "string"
+      },
+      "InitialPrice": {
+        "description": "Initial price when instantiating a contract",
+        "type": "object",
+        "required": [
+          "price",
+          "price_usd"
+        ],
+        "properties": {
+          "price": {
+            "description": "Price of base in terms of quote",
+            "allOf": [
+              {
+                "$ref": "#/definitions/PriceBaseInQuote"
+              }
+            ]
+          },
+          "price_usd": {
+            "description": "Price of collateral in terms of USD",
+            "allOf": [
+              {
+                "$ref": "#/definitions/PriceCollateralInUsd"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarketId": {
+        "type": "string",
+        "format": "market-id"
+      },
+      "MaxLiquidity": {
+        "description": "Maximum liquidity for deposit.\n\nNote that this limit can be exceeded due to changes in collateral asset price or impairment.",
+        "oneOf": [
+          {
+            "description": "No bounds on how much liquidity can be deposited.",
+            "type": "object",
+            "required": [
+              "unlimited"
+            ],
+            "properties": {
+              "unlimited": {
+                "type": "object",
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Only allow the given amount in USD.\n\nThe exchange rate at time of deposit will be used.",
+            "type": "object",
+            "required": [
+              "usd"
+            ],
+            "properties": {
+              "usd": {
+                "type": "object",
+                "required": [
+                  "amount"
+                ],
+                "properties": {
+                  "amount": {
+                    "description": "Amount in USD",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/NonZero decimal"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "NewMarketParams": {
+        "description": "Config info passed on to all sub-contracts in order to add a new market.",
+        "type": "object",
+        "required": [
+          "initial_borrow_fee_rate",
+          "market_id",
+          "spot_price",
+          "token"
+        ],
+        "properties": {
+          "config": {
+            "description": "config",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ConfigUpdate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "initial_borrow_fee_rate": {
+            "description": "Initial borrow fee rate, annualized",
+            "allOf": [
+              {
+                "$ref": "#/definitions/Decimal256"
+              }
+            ]
+          },
+          "initial_price": {
+            "description": "Initial price, only provided for manual price updates",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/InitialPrice"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "market_id": {
+            "description": "Base, quote, and market type",
+            "allOf": [
+              {
+                "$ref": "#/definitions/MarketId"
+              }
+            ]
+          },
+          "spot_price": {
+            "description": "mandatory spot price config",
+            "allOf": [
+              {
+                "$ref": "#/definitions/SpotPriceConfigInit"
+              }
+            ]
+          },
+          "token": {
+            "description": "The token used for collateral",
+            "allOf": [
+              {
+                "$ref": "#/definitions/TokenInit"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "NonZero decimal": {
+        "type": "string",
+        "format": "non-zero"
+      },
+      "PriceBaseInQuote": {
+        "description": "The price of the currency pair, given as `quote / base`, e.g. \"20,000 USD per BTC\".",
+        "allOf": [
+          {
+            "$ref": "#/definitions/NonZero decimal"
+          }
+        ]
+      },
+      "PriceCollateralInUsd": {
+        "description": "PriceBaseInQuote converted to USD",
+        "allOf": [
+          {
+            "$ref": "#/definitions/NonZero decimal"
+          }
+        ]
+      },
+      "PythConfigInit": {
+        "description": "Configuration for pyth init messages",
+        "type": "object",
+        "required": [
+          "contract_address",
+          "network"
+        ],
+        "properties": {
+          "contract_address": {
+            "description": "The address of the pyth oracle contract",
+            "allOf": [
+              {
+                "$ref": "#/definitions/RawAddr"
+              }
+            ]
+          },
+          "network": {
+            "description": "Which network to use for the price service This isn't used for any internal logic, but clients must use the appropriate price service endpoint to match this",
+            "allOf": [
+              {
+                "$ref": "#/definitions/PythPriceServiceNetwork"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "PythPriceServiceNetwork": {
+        "description": "Which network to use for the price service",
+        "oneOf": [
+          {
+            "description": "Stable CosmWasm\n\nFrom <https://pyth.network/developers/price-feed-ids#cosmwasm-stable>",
+            "type": "string",
+            "enum": [
+              "stable"
+            ]
+          },
+          {
+            "description": "Edge CosmWasm\n\nFrom <https://pyth.network/developers/price-feed-ids#cosmwasm-edge>",
+            "type": "string",
+            "enum": [
+              "edge"
+            ]
+          }
+        ]
+      },
+      "RawAddr": {
+        "description": "A raw address passed in via JSON.\n\nThe purpose of this newtype wrapper is to make it clear at the type level if a parameter is an address, and ensure that we go through a proper validation step when using it.",
+        "type": "string"
+      },
+      "ShutdownEffect": {
+        "description": "Are we turning off these features or turning them back on?",
+        "oneOf": [
+          {
+            "description": "Disable the given portion of the protocol",
+            "type": "string",
+            "enum": [
+              "disable"
+            ]
+          },
+          {
+            "description": "Turn the given portion of the protocol back on",
+            "type": "string",
+            "enum": [
+              "enable"
+            ]
+          }
+        ]
+      },
+      "ShutdownImpact": {
+        "description": "Which part of the protocol should be impacted",
+        "oneOf": [
+          {
+            "description": "Ability to open new positions and update existing positions.\n\nIncludes: updating trigger orders, creating limit orders.",
+            "type": "string",
+            "enum": [
+              "new_trades"
+            ]
+          },
+          {
+            "description": "Ability to close positions",
+            "type": "string",
+            "enum": [
+              "close_positions"
+            ]
+          },
+          {
+            "description": "Any owner actions on the market",
+            "type": "string",
+            "enum": [
+              "owner_actions"
+            ]
+          },
+          {
+            "description": "Deposit liquidity, including reinvesting yield",
+            "type": "string",
+            "enum": [
+              "deposit_liquidity"
+            ]
+          },
+          {
+            "description": "Withdraw liquidity in any way\n\nIncludes withdrawing, claiming yield",
+            "type": "string",
+            "enum": [
+              "withdraw_liquidity"
+            ]
+          },
+          {
+            "description": "Any activities around xLP staking",
+            "type": "string",
+            "enum": [
+              "staking"
+            ]
+          },
+          {
+            "description": "Any activities around unstaking xLP, including collecting",
+            "type": "string",
+            "enum": [
+              "unstaking"
+            ]
+          },
+          {
+            "description": "Transfers of positions tokens",
+            "type": "string",
+            "enum": [
+              "transfer_positions"
+            ]
+          },
+          {
+            "description": "Transfers of liquidity tokens, both LP and xLP",
+            "type": "string",
+            "enum": [
+              "transfer_lp"
+            ]
+          },
+          {
+            "description": "Setting the price",
+            "type": "string",
+            "enum": [
+              "set_price"
+            ]
+          },
+          {
+            "description": "Transfer DAO fees",
+            "type": "string",
+            "enum": [
+              "transfer_dao_fees"
+            ]
+          },
+          {
+            "description": "Turning the crank",
+            "type": "string",
+            "enum": [
+              "crank"
+            ]
+          },
+          {
+            "description": "Setting manual price",
+            "type": "string",
+            "enum": [
+              "set_manual_price"
+            ]
+          }
+        ]
+      },
+      "SpotPriceConfigInit": {
+        "description": "Spot price config for initialization messages",
+        "oneOf": [
+          {
+            "description": "Manual spot price",
+            "type": "object",
+            "required": [
+              "manual"
+            ],
+            "properties": {
+              "manual": {
+                "type": "object",
+                "required": [
+                  "admin"
+                ],
+                "properties": {
+                  "admin": {
+                    "description": "The admin address for manual spot price updates",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/RawAddr"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "External oracle",
+            "type": "object",
+            "required": [
+              "oracle"
+            ],
+            "properties": {
+              "oracle": {
+                "type": "object",
+                "required": [
+                  "feeds",
+                  "feeds_usd"
+                ],
+                "properties": {
+                  "feeds": {
+                    "description": "sequence of spot price feeds which are composed to generate a single spot price",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/SpotPriceFeedInit"
+                    }
+                  },
+                  "feeds_usd": {
+                    "description": "if necessary, sequence of spot price feeds which are composed to generate a single USD spot price",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/SpotPriceFeedInit"
+                    }
+                  },
+                  "pyth": {
+                    "description": "Pyth configuration, required on chains that use pyth feeds",
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/PythConfigInit"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "stride": {
+                    "description": "Stride configuration, required on chains that use stride feeds",
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/StrideConfigInit"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "volatile_diff_seconds": {
+                    "description": "See [SpotPriceConfig::volatile_diff_seconds]",
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "format": "uint32",
+                    "minimum": 0.0
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SpotPriceFeedDataInit": {
+        "description": "The data for an individual spot price feed",
+        "oneOf": [
+          {
+            "description": "Hardcoded value",
+            "type": "object",
+            "required": [
+              "constant"
+            ],
+            "properties": {
+              "constant": {
+                "type": "object",
+                "required": [
+                  "price"
+                ],
+                "properties": {
+                  "price": {
+                    "description": "The constant price",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/NonZero decimal"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Pyth price feeds",
+            "type": "object",
+            "required": [
+              "pyth"
+            ],
+            "properties": {
+              "pyth": {
+                "type": "object",
+                "required": [
+                  "age_tolerance_seconds",
+                  "id"
+                ],
+                "properties": {
+                  "age_tolerance_seconds": {
+                    "description": "price age tolerance, in seconds",
+                    "type": "integer",
+                    "format": "uint32",
+                    "minimum": 0.0
+                  },
+                  "id": {
+                    "description": "The identifier on pyth",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/Identifier"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Stride liquid staking",
+            "type": "object",
+            "required": [
+              "stride"
+            ],
+            "properties": {
+              "stride": {
+                "type": "object",
+                "required": [
+                  "age_tolerance_seconds",
+                  "denom"
+                ],
+                "properties": {
+                  "age_tolerance_seconds": {
+                    "description": "price age tolerance, in seconds",
+                    "type": "integer",
+                    "format": "uint32",
+                    "minimum": 0.0
+                  },
+                  "denom": {
+                    "description": "The IBC denom for the asset",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Native oracle module on the sei chain",
+            "type": "object",
+            "required": [
+              "sei"
+            ],
+            "properties": {
+              "sei": {
+                "type": "object",
+                "required": [
+                  "denom"
+                ],
+                "properties": {
+                  "denom": {
+                    "description": "The denom to use",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Simple contract with a QueryMsg::Price call",
+            "type": "object",
+            "required": [
+              "simple"
+            ],
+            "properties": {
+              "simple": {
+                "type": "object",
+                "required": [
+                  "age_tolerance_seconds",
+                  "contract"
+                ],
+                "properties": {
+                  "age_tolerance_seconds": {
+                    "description": "price age tolerance, in seconds",
+                    "type": "integer",
+                    "format": "uint32",
+                    "minimum": 0.0
+                  },
+                  "contract": {
+                    "description": "The contract to use",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/RawAddr"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SpotPriceFeedInit": {
+        "description": "An individual feed used to compose a final spot price",
+        "type": "object",
+        "required": [
+          "data",
+          "inverted"
+        ],
+        "properties": {
+          "data": {
+            "description": "The data for this price feed",
+            "allOf": [
+              {
+                "$ref": "#/definitions/SpotPriceFeedDataInit"
+              }
+            ]
+          },
+          "inverted": {
+            "description": "is this price feed inverted",
+            "type": "boolean"
+          },
+          "volatile": {
+            "description": "See [SpotPriceFeed::volatile]",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "StrideConfigInit": {
+        "description": "Configuration for stride",
+        "type": "object",
+        "required": [
+          "contract_address"
+        ],
+        "properties": {
+          "contract_address": {
+            "description": "The address of the redemption rate contract",
+            "allOf": [
+              {
+                "$ref": "#/definitions/RawAddr"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenInit": {
+        "description": "The number of decimal places for tokens may vary and there is a smart query cost for deriving it at runtime so we grab the info at init time and then store it as a full-fledged token",
+        "oneOf": [
+          {
+            "description": "A cw20 address. Decimal places will be derived.",
+            "type": "object",
+            "required": [
+              "cw20"
+            ],
+            "properties": {
+              "cw20": {
+                "type": "object",
+                "required": [
+                  "addr"
+                ],
+                "properties": {
+                  "addr": {
+                    "description": "Address of the CW20 contract",
+                    "allOf": [
+                      {
+                        "$ref": "#/definitions/RawAddr"
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "description": "Native currency. May cover some IBC tokens too",
+            "type": "object",
+            "required": [
+              "native"
+            ],
+            "properties": {
+              "native": {
+                "type": "object",
+                "required": [
+                  "decimal_places",
+                  "denom"
+                ],
+                "properties": {
+                  "decimal_places": {
+                    "description": "Number of decimal points",
+                    "type": "integer",
+                    "format": "uint8",
+                    "minimum": 0.0
+                  },
+                  "denom": {
+                    "description": "Denom used within the chain for this native coin",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "Usd": {
+        "description": "Unsigned value",
+        "allOf": [
+          {
+            "$ref": "#/definitions/Decimal256"
+          }
+        ]
+      }
+    }
+  },
+  "query": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "QueryMsg",
+    "description": "Queries available on the factory contract",
+    "oneOf": [
+      {
+        "description": "returns [cw2::ContractVersion]",
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "properties": {
+          "version": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "* returns [MarketsResp]\n\nAll the markets",
+        "type": "object",
+        "required": [
+          "markets"
+        ],
+        "properties": {
+          "markets": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "description": "Defaults to [MARKETS_QUERY_LIMIT_DEFAULT]",
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "format": "uint32",
+                "minimum": 0.0
+              },
+              "start_after": {
+                "description": "Last seen market ID in a [MarketsResp] for enumeration",
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/MarketId"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "* returns [MarketInfoResponse]\n\nCombined query to get the market related addresses",
+        "type": "object",
+        "required": [
+          "market_info"
+        ],
+        "properties": {
+          "market_info": {
+            "type": "object",
+            "required": [
+              "market_id"
+            ],
+            "properties": {
+              "market_id": {
+                "description": "Market ID to look up",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/MarketId"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "* returns [AddrIsContractResp]\n\ngiven an address, checks if it's any of the registered protocol contracts.",
+        "type": "object",
+        "required": [
+          "addr_is_contract"
+        ],
+        "properties": {
+          "addr_is_contract": {
+            "type": "object",
+            "required": [
+              "addr"
+            ],
+            "properties": {
+              "addr": {
+                "description": "Address to check",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/RawAddr"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "* returns [FactoryOwnerResp]\n\nReturns information about the owners of the factory",
+        "type": "object",
+        "required": [
+          "factory_owner"
+        ],
+        "properties": {
+          "factory_owner": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "returns [ShutdownStatus]",
+        "type": "object",
+        "required": [
+          "shutdown_status"
+        ],
+        "properties": {
+          "shutdown_status": {
+            "type": "object",
+            "required": [
+              "market_id"
+            ],
+            "properties": {
+              "market_id": {
+                "description": "Market to look up",
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/MarketId"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "description": "returns [CodeIds]",
+        "type": "object",
+        "required": [
+          "code_ids"
+        ],
+        "properties": {
+          "code_ids": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    ],
+    "definitions": {
+      "MarketId": {
+        "type": "string",
+        "format": "market-id"
+      },
+      "RawAddr": {
+        "description": "A raw address passed in via JSON.\n\nThe purpose of this newtype wrapper is to make it clear at the type level if a parameter is an address, and ensure that we go through a proper validation step when using it.",
+        "type": "string"
+      }
+    }
+  },
+  "migrate": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "MigrateMsg",
+    "description": "Placeholder migration message",
+    "type": "object",
+    "additionalProperties": false
+  },
+  "sudo": null,
+  "responses": {
+    "addr_is_contract": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AddrIsContractResp",
+      "description": "Response from [QueryMsg::AddrIsContract]",
+      "type": "object",
+      "required": [
+        "is_contract"
+      ],
+      "properties": {
+        "contract_type": {
+          "description": "If this is a contract: what type of contract is it?",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ContractType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "is_contract": {
+          "description": "Boolean indicating whether this is a success for failure.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "ContractType": {
+          "description": "The type of contract identified by [QueryMsg::AddrIsContract].",
+          "oneOf": [
+            {
+              "description": "The factory contract",
+              "type": "string",
+              "enum": [
+                "factory"
+              ]
+            },
+            {
+              "description": "An LP or xLP liquidity token proxy",
+              "type": "string",
+              "enum": [
+                "liquidity_token"
+              ]
+            },
+            {
+              "description": "A position NFT proxy",
+              "type": "string",
+              "enum": [
+                "position_token"
+              ]
+            },
+            {
+              "description": "A market",
+              "type": "string",
+              "enum": [
+                "market"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "code_ids": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CodeIds",
+      "description": "Which code IDs are currently set for new markets",
+      "type": "object",
+      "required": [
+        "liquidity_token",
+        "market",
+        "position_token"
+      ],
+      "properties": {
+        "liquidity_token": {
+          "description": "Liquidity token proxy code ID",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Uint64"
+            }
+          ]
+        },
+        "market": {
+          "description": "Market code ID",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Uint64"
+            }
+          ]
+        },
+        "position_token": {
+          "description": "Position token proxy code ID",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Uint64"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "Uint64": {
+          "description": "A thin wrapper around u64 that is using strings for JSON encoding/decoding, such that the full u64 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.\n\n# Examples\n\nUse `from` to create instances of this and `u64` to get the value out:\n\n``` # use cosmwasm_std::Uint64; let a = Uint64::from(42u64); assert_eq!(a.u64(), 42);\n\nlet b = Uint64::from(70u32); assert_eq!(b.u64(), 70); ```",
+          "type": "string"
+        }
+      }
+    },
+    "factory_owner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FactoryOwnerResp",
+      "description": "Information on owners and other protocol-wide special addresses",
+      "type": "object",
+      "required": [
+        "admin_migration",
+        "dao",
+        "kill_switch",
+        "owner",
+        "wind_down"
+      ],
+      "properties": {
+        "admin_migration": {
+          "description": "Migration admin of the factory",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "dao": {
+          "description": "Wallet that receives DAO/protocol fees for all markets",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "kill_switch": {
+          "description": "Wallet that can activate kill switch shutdowns",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "owner": {
+          "description": "Owner of the factory",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "wind_down": {
+          "description": "Wallet that can activate market wind downs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "Addr": {
+          "description": "A human readable address.\n\nIn Cosmos, this is typically bech32 encoded. But for multi-chain smart contracts no assumptions should be made other than being UTF-8 encoded and of reasonable length.\n\nThis type represents a validated address. It can be created in the following ways 1. Use `Addr::unchecked(input)` 2. Use `let checked: Addr = deps.api.addr_validate(input)?` 3. Use `let checked: Addr = deps.api.addr_humanize(canonical_addr)?` 4. Deserialize from JSON. This must only be done from JSON that was validated before such as a contract's state. `Addr` must not be used in messages sent by the user because this would result in unvalidated instances.\n\nThis type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.",
+          "type": "string"
+        }
+      }
+    },
+    "market_info": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MarketInfoResponse",
+      "description": "Information about a specific market, returned from [QueryMsg::MarketInfo].",
+      "type": "object",
+      "required": [
+        "liquidity_token_lp",
+        "liquidity_token_xlp",
+        "market_addr",
+        "position_token"
+      ],
+      "properties": {
+        "liquidity_token_lp": {
+          "description": "Address of the LP liquidity token",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "liquidity_token_xlp": {
+          "description": "Address of the xLP liquidity token",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "market_addr": {
+          "description": "Address of the market",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        },
+        "position_token": {
+          "description": "Address of the position token",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "Addr": {
+          "description": "A human readable address.\n\nIn Cosmos, this is typically bech32 encoded. But for multi-chain smart contracts no assumptions should be made other than being UTF-8 encoded and of reasonable length.\n\nThis type represents a validated address. It can be created in the following ways 1. Use `Addr::unchecked(input)` 2. Use `let checked: Addr = deps.api.addr_validate(input)?` 3. Use `let checked: Addr = deps.api.addr_humanize(canonical_addr)?` 4. Deserialize from JSON. This must only be done from JSON that was validated before such as a contract's state. `Addr` must not be used in messages sent by the user because this would result in unvalidated instances.\n\nThis type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.",
+          "type": "string"
+        }
+      }
+    },
+    "markets": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MarketsResp",
+      "description": "Response from [QueryMsg::Markets]\n\nUse [QueryMsg::MarketInfo] for details on each market.",
+      "type": "object",
+      "required": [
+        "markets"
+      ],
+      "properties": {
+        "markets": {
+          "description": "Markets maintained by this factory",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MarketId"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "MarketId": {
+          "type": "string",
+          "format": "market-id"
+        }
+      }
+    },
+    "shutdown_status": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ShutdownStatus",
+      "description": "Return value from [QueryMsg::Shutdown]",
+      "type": "object",
+      "required": [
+        "disabled"
+      ],
+      "properties": {
+        "disabled": {
+          "description": "Any parts of the market which have been disabled.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ShutdownImpact"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "definitions": {
+        "ShutdownImpact": {
+          "description": "Which part of the protocol should be impacted",
+          "oneOf": [
+            {
+              "description": "Ability to open new positions and update existing positions.\n\nIncludes: updating trigger orders, creating limit orders.",
+              "type": "string",
+              "enum": [
+                "new_trades"
+              ]
+            },
+            {
+              "description": "Ability to close positions",
+              "type": "string",
+              "enum": [
+                "close_positions"
+              ]
+            },
+            {
+              "description": "Any owner actions on the market",
+              "type": "string",
+              "enum": [
+                "owner_actions"
+              ]
+            },
+            {
+              "description": "Deposit liquidity, including reinvesting yield",
+              "type": "string",
+              "enum": [
+                "deposit_liquidity"
+              ]
+            },
+            {
+              "description": "Withdraw liquidity in any way\n\nIncludes withdrawing, claiming yield",
+              "type": "string",
+              "enum": [
+                "withdraw_liquidity"
+              ]
+            },
+            {
+              "description": "Any activities around xLP staking",
+              "type": "string",
+              "enum": [
+                "staking"
+              ]
+            },
+            {
+              "description": "Any activities around unstaking xLP, including collecting",
+              "type": "string",
+              "enum": [
+                "unstaking"
+              ]
+            },
+            {
+              "description": "Transfers of positions tokens",
+              "type": "string",
+              "enum": [
+                "transfer_positions"
+              ]
+            },
+            {
+              "description": "Transfers of liquidity tokens, both LP and xLP",
+              "type": "string",
+              "enum": [
+                "transfer_lp"
+              ]
+            },
+            {
+              "description": "Setting the price",
+              "type": "string",
+              "enum": [
+                "set_price"
+              ]
+            },
+            {
+              "description": "Transfer DAO fees",
+              "type": "string",
+              "enum": [
+                "transfer_dao_fees"
+              ]
+            },
+            {
+              "description": "Turning the crank",
+              "type": "string",
+              "enum": [
+                "crank"
+              ]
+            },
+            {
+              "description": "Setting manual price",
+              "type": "string",
+              "enum": [
+                "set_manual_price"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "version": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContractVersion",
+      "type": "object",
+      "required": [
+        "contract",
+        "version"
+      ],
+      "properties": {
+        "contract": {
+          "description": "contract is the crate name of the implementing contract, eg. `crate:cw20-base` we will use other prefixes for other languages, and their standard global namespacing",
+          "type": "string"
+        },
+        "version": {
+          "description": "version is any string that this implementation knows. It may be simple counter \"1\", \"2\". or semantic version on release tags \"v0.7.0\", or some custom feature flag list. the only code that needs to understand the version parsing is code that knows how to migrate from the given contract (and is tied to it's implementation somehow)",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
